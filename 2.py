@@ -1,27 +1,29 @@
 
-input_string = "game 1: 3 red, 5 blue, 7 green, 6 red, 2 green, 7 red"
 total=0
+input_string = "Game 54: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
 
 # Splitting the string after ":" and stripping unnecessary spaces
 split_after_colon = input_string.split(':')
 if len(split_after_colon) == 2:
-    game_number = split_after_colon[0].split()[-1]  # Extracting the game number
+    game_number = ''.join(filter(str.isdigit, split_after_colon[0]))  # Extracting the game number
     data = split_after_colon[1].strip()
-
-    # Splitting pairs by comma
-    pairs = data.split(',')
+   
+    # Splitting groups by semicolon
+    groups = data.split(';')
     
     result = {"game_number": game_number, "color_totals": {}}
 
-    for pair in pairs:
-        split_pair = pair.strip().split()
-        if len(split_pair) == 2:
-            key = int(split_pair[0])
-            color = split_pair[1]
-            if color in result["color_totals"]:
-                result["color_totals"][color] += key
-            else:
-                result["color_totals"][color] = key
+    for group in groups:
+        pairs = group.strip().split(',')
+        for pair in pairs:
+            split_pair = pair.strip().split()
+            if len(split_pair) == 2:
+                key = int(split_pair[0])
+                color = split_pair[1]
+                if color in result["color_totals"]:
+                    result["color_totals"][color] += key
+                else:
+                    result["color_totals"][color] = key
 
     possible=1
 
@@ -42,7 +44,8 @@ if len(split_after_colon) == 2:
     else:
         print("game not possible with blue")
         possible=0
-    print("game was possible")
+    print("game ", result["game_number"][0], " was possible")
     total=total+possible
 print(total)
+
 
