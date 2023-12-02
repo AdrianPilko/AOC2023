@@ -26,7 +26,7 @@ def firstAndLast(text):
     for numstr in spelled_out_numbers:
         resultPos = s.find(numstr)
         #print(resultPos," ",  lastResultPos, " ", numstr) 
-        if resultPos >=0 and resultPos < speltResultPos:
+        if resultPos >=0 and resultPos <= speltResultPos:
            first_digit_spelt=int(spelled_out_numbers[numstr])
            #print("found number as word=", resultPos, " ", numstr)
            lastResultPos = resultPos
@@ -37,7 +37,7 @@ def firstAndLast(text):
     for numstr in numbers:
         resultPos = s.find(numstr)
         #print(resultPos, " ", numstr)
-        if resultPos >=0 and resultPos < digitResultPos:
+        if resultPos >=0 and resultPos <= digitResultPos:
            first_digit_num=int(numbers[numstr])
            #print("found number as digit=", numstr," ", resultPos)
            lastResultPos = resultPos
@@ -53,23 +53,23 @@ def firstAndLast(text):
 ## now look from end of line using find
     #print("finding spelt from end back")
     lastResultPos = -1
-    speltResultPos = -1
-    digitResultPos = -1
+    speltResultPos = 0
+    digitResultPos = 0
     for numstr in spelled_out_numbers:
-        resultPos = s.find(numstr) 
+        resultPos = s.rfind(numstr) 
         #print(resultPos," ",  lastResultPos, " ", numstr) 
-        if resultPos >=0 and resultPos > speltResultPos:
+        if resultPos >=0 and resultPos >= speltResultPos:
            last_digit_spelt=int(spelled_out_numbers[numstr])
-           #print("found number as word pos=", resultPos, " num=", numstr)
+           print("found number as word pos=", resultPos, " num=", numstr)
            lastResultPos = resultPos
            speltResultPos = resultPos
     #print("found last digit as word=" ,last_digit_spelt) 
     #print("finding digit nums from end")
     lastResultPos = -1
     for numstr in numbers:
-        resultPos = s.find(numstr)
-        #print(resultPos," ",  lastResultPos, " ", numstr) 
-        if resultPos >=0 and resultPos > digitResultPos:
+        resultPos = s.rfind(numstr)
+        #print("resultPos=",resultPos," lastResultPos",  lastResultPos, " numstr=", numstr) 
+        if resultPos >=0 and resultPos >= digitResultPos:
            last_digit_num=int(numbers[numstr])
            #print("found number as digit, pos=", resultPos, " num=", numstr)
            lastResultPos = resultPos
@@ -101,6 +101,7 @@ else:
 lines = inputFile.readlines()
 total = 0
 for line in lines:
+    print("=================== ")
     print(line)
     first_digit, last_digit = firstAndLast(line)
     if ((first_digit!=None) and (last_digit!=None)):    
