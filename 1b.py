@@ -10,95 +10,88 @@ import sys
 #zoneight234
 #7pqrstsixteen
 
-def findFirstLastSpeltNumber(text, words_tuple):
-    positions = []
-    for word in words_tuple:
-        pattern = re.escape(word)
-        matches = list(re.finditer(pattern, text))
-        if matches:
-            positions.append((matches[0].start(), matches[-1].start() + len(word) - 1))
-        else:
-            positions.append((None, None))
-    return positions
+number_value = None
+last_value = None
 
+
+def last_occurrence_pattern(pattern):
+    return r'(?s)(?=.*' + pattern + ')(?!.*' + pattern + '.*)'
+
+def create_last_occurrence_spelled_out_pattern(spelled_out_numbers):
+    pattern_parts = [last_occurrence_pattern(re.escape(word)) for word in spelled_out_numbers.keys()]
+    spelled_out_pattern_last = "|".join(pattern_parts)
+    return spelled_out_pattern_last
+
+
+
+
+def firstAndLast(text):    
+    global last_value
+    global number_value  
     
-if len(sys.argv)==2:
-    filename = sys.argv[1]
-    inputFile = open(filename, "r")
-else:
-    print ("usage: " + sys.argv[0] + " <input filename>")
-    sys.exit(1)
+    # Define regex pattern for spelled-out numbers and digits
+    spelled_out_numbers = {
+        'one': '1', 'two': '2', 'three': '3', 'four': '4',
+        'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9'
+    }
 
-lines = inputFile.readlines()
-total = 0
-numbersSpelt=('one', 'two', 'three', 'four', 'five','six','seven','eight','nine')
+    # Create a regex pattern to match spelled-out numbers or digits separately
+    spelled_out_pattern_first = "|".join(r'{}'.format(re.escape(word)) for word in spelled_out_numbers.keys())
+    digit_pattern_first = r'\d+'
+    # Combine patterns for both spelled-out numbers and digits
+    combined_pattern_first = "|".join([spelled_out_pattern_first, digit_pattern_first])
+    # Find all matches in the text
+    match_first = re.search(combined_pattern_first, text)
 
-for line in lines:
-    firstDigitRE = re.search('[\d]',line)
-    lastDigitRE = re.search('(\d)(?!.*\d)',line)
-    speltPositions = findFirstLastSpeltNumber(line,numbersSpelt)
-    numFirstRE = speltPositions[0]
-    numLastRE = speltPositions[1]
+    # Create a regex pattern to match spelled-out numbers or digits separately
+    spelled_out_pattern_last = create_last_occurrence_spelled_out_pattern(spelled_out_numbers)
+    digit_pattern_last = '(\d)(?!.*\d)'
+    # Combine patterns for both spelled-out numbers and digits
+    combined_pattern_last = "|".join([spelled_out_pattern_last, digit_pattern_last])
+    # Find all matches in the text
+    match_last = re.search(combined_pattern_last, text)
 
-    print(firstDigitRE)
-    print(lastDigitRE)
-    print(numFirstRE)
-    print(numLastRE)
-    
-    # work out which one came first
-    if (firstDigitRE and numFirstRE):    
-        if (firstDigitRE.start() < numFirstRE.start()):
-            concatd = firstDigitRE.group()
-        else:
-            if (numFirstRE.group() == 'one'): concatd = '1'
-            if (numFirstRE.group() == 'two'): concatd = '2'
-            if (numFirstRE.group() == 'three'): concatd = '3'
-            if (numFirstRE.group() == 'four'):concatd = '4'
-            if (numFirstRE.group() == 'five'):concatd = '5'
-            if (numFirstRE.group() == 'six'): concatd = '6'
-            if (numFirstRE.group() == 'seven'): concatd = '7'
-            if (numFirstRE.group() == 'eight'): concatd = '8'
-            if (numFirstRE.group() == 'nine'): concatd = '9'
-    elif firstDigitRE:
-        concatd = firstDigitRE.group()
-    elif numFirstRE:
-        if (numFirstRE.group() == 'one'): concatd = '1'
-        if (numFirstRE.group() == 'two'): concatd = '2'
-        if (numFirstRE.group() == 'three'): concatd = '3'
-        if (numFirstRE.group() == 'four'):concatd = '4'
-        if (numFirstRE.group() == 'five'):concatd = '5'
-        if (numFirstRE.group() == 'six'): concatd = '6'
-        if (numFirstRE.group() == 'seven'): concatd = '7'
-        if (numFirstRE.group() == 'eight'): concatd = '8'
-        if (numFirstRE.group() == 'nine'): concatd = '9'
+    print(match_first)
+    if match_first:
+        matched_text = match_first.group()
         
-    # work out which one came last
-    if (lastDigitRE and numLastRE):    
-        if (lastDigitRE.start() < numLastRE.start()):
-            concatd = lastDigitRE.group()
+        if matched_text.isdigit():
+            number_value = int(matched_text)
         else:
-            if (numLastRE.group() == 'one'): concatd = '1'
-            if (numLastRE.group() == 'two'): concatd = '2'
-            if (numLastRE.group() == 'three'): concatd = '3'
-            if (numLastRE.group() == 'four'):concatd = '4'
-            if (numLastRE.group() == 'five'):concatd = '5'
-            if (numLastRE.group() == 'six'): concatd = '6'
-            if (numLastRE.group() == 'seven'): concatd = '7'
-            if (numLastRE.group() == 'eight'): concatd = '8'
-            if (numLastRE.group() == 'nine'): concatd = '9'
-    elif lastDigitRE:
-        concatd = lastDigitRE.group()
-    elif numLastRE:
-        if (numLastRE.group() == 'one'): concatd = '1'
-        if (numLastRE.group() == 'two'): concatd = '2'
-        if (numLastRE.group() == 'three'): concatd = '3'
-        if (numLastRE.group() == 'four'):concatd = '4'
-        if (numLastRE.group() == 'five'):concatd = '5'
-        if (numLastRE.group() == 'six'): concatd = '6'
-        if (numLastRE.group() == 'seven'): concatd = '7'
-        if (numLastRE.group() == 'eight'): concatd = '8'
-        if (numLastRE.group() == 'nine'): concatd = '9'
-    total = int(concatd)+total                        
-print (total)
+            for word, digit in spelled_out_numbers.items():
+                if matched_text == word:
+                    number_value = int(digit)
+
+    print(match_last)
+    if match_last:
+        matched_text = match_last.group()
+        
+        if matched_text.isdigit():
+            last_value = int(matched_text)
+        else:
+            for word, digit in spelled_out_numbers.items():
+                if matched_text == word:
+                    last_value = int(digit)
+
+
+#if len(sys.argv)==2:
+#    filename = sys.argv[1]
+#    inputFile = open(filename, "r")
+#else:
+ #   print ("usage: " + sys.argv[0] + " <input filename>")
+#    sys.exit(1)
+
+#lines = inputFile.readlines()
+total = 0
+
+#for line in lines:
+line = "one2three4five"
+print(line)
+print(firstAndLast(line))
+print ("first number = ", number_value);
+print ("last number = ", last_value);
+total += number_value
+   
+print ("total=", total)
     
     
