@@ -12,10 +12,15 @@ def firstAndLast(text):
     # Extract sequences of characters using regex
     sequences = re.findall(r'\d+|[a-zA-Z]+', text)
     for sequence in sequences:
+        print(sequence)
         if sequence.isdigit():
+            rightmost_digit = int(str(sequence[-1]))  # Get the rightmost digit            
+            print(rightmost_digit)
             if first_digit is None:
-                first_digit = int(sequence)
-            last_digit = int(sequence)
+                first_digit = int(sequence)                
+            #last_digit = int(sequence)
+            last_digit = rightmost_digit
+            
         elif sequence.lower() in spelled_out_numbers:
             digit = int(spelled_out_numbers[sequence.lower()])
             if first_digit is None:
