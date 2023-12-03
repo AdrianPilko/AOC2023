@@ -64,26 +64,26 @@ def checkSymbols(CheckPre,CheckNext, symbolsP, symbolsN, indicesC, symbolsC, num
         for s in range(0,len(symbolsP),1):
              for n in range(0,len(indicesC),1):             
                 if  (symbolsP[s][0] <= indicesC[n]+numLensC[n]) and (symbolsP[s][0] >= indicesC[n]-1):
-                    print ("Found part with adjacent symbol next line=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
-                    print ("symP=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
-                    result += numbersC[s]                   
-                else:
-                    print ("NO MATCH PREVIOUS=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
+                    print ("previous line=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
+                    #print ("symP=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
+                    result += numbersC[n]                   
+             #   else:
+   #                 print ("NO MATCH PREVIOUS=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
     for s in range(0,len(symbolsC),1):
         for n in range(0,len(indicesC),1):         
             if  (symbolsC[s][0] <= indicesC[n]+numLensC[n]) and (symbolsC[s][0] >= indicesC[n]):
-                print ("Found part with adjacent symbol=", symbolsC[s], " ind=",indicesC[n], " num=",numbersC[n])
+                print ("current line=", symbolsC[s], " ind=",indicesC[n], " num=",numbersC[n])
                 result += numbersC[n]
-            else:
-                print ("NO MATCH CURRENT=", symbolsC[s], " ind=",indicesC[n], " num=",numbersC[n]) 
+            #else:
+    #            print ("NO MATCH CURRENT=", symbolsC[s], " ind=",indicesC[n], " num=",numbersC[n]) 
     if CheckNext==True:                
         for s in range(0,len(symbolsN),1):
             for n in range(0,len(indicesC),1):
                 if (symbolsN[s][0] <= indicesC[n]+numLensC[n]) and (symbolsN[s][0] >= indicesC[n]-1):
-                    print ("Found part with adjacent symbol next line=", symbolsN[s], " ind=",indicesC[n], " num=",numbersC[n])
+                    print ("next line=", symbolsN[s], " ind=",indicesC[n], " num=",numbersC[n])
                     result += numbersC[n]
-                else:
-                    print ("NO MATCH NEXT=",symbolsN[s], " ind=",indicesC[n], " num=",numbersC[n])                   
+             #   else:
+     #               print ("NO MATCH NEXT=",symbolsN[s], " ind=",indicesC[n], " num=",numbersC[n])                   
     return result
         
 #read the lines
@@ -132,12 +132,9 @@ print("first Lines!!!")
 ## for first line we only care about the current and next, there is no previous!
 result+=checkSymbols(False,True, symbolsP, symbolsN, indicesC, symbolsC, numLensC, numbersC)    
 
-print("middle Lines!!!")
 
 for currentIndex in range(1, maxLine, 1):   
-#if (1):
- #   currentIndex=1
-    
+    print("middle Lines!!! ", currentIndex)   
     previous = lines[currentIndex-1]
     current = lines[currentIndex]
     next = lines[currentIndex+1]
