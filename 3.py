@@ -4,6 +4,8 @@ import math
 
 # advent of code 2023 day 3
 
+result = 0
+
 # Read command line args
 
 if len(sys.argv)==2:
@@ -47,8 +49,6 @@ def extractSymbolsIndices(inString):
     return indices
 
         
-result = 0
-
 #read the lines
 lines = inputFile.readlines()
 
@@ -86,6 +86,23 @@ symbolsC = extractSymbolsIndices(current)
 numbersN, indicesN, numLensN = extractNumbersIndices(next)
 symbolsN = extractSymbolsIndices(next)
 
+## work out if any adjacent to each number    
+indicesCLen = len(indicesC) 
+symbolsCLen = len(symbolsC) 
+symbolsNLen = len(symbolsN) 
+
+print("first Lines!!!")
+## for first line we only care about the current and next, there is no previous!
+for n in range(0, indicesCLen, 1):           
+    if (n < symbolsCLen):
+        if (symbolsC[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsC[n][0] >= indicesC[n]-numLensC[n]-1):
+            print ("Found part with adjacent symbol=", symbolsC[n], " ind=",indicesC[n], " num=",numbersC[n])
+            result += numbersC[n]
+    if (n < symbolsNLen):
+        if (symbolsN[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsN[n][0] >= indicesC[n]-numLensC[n]-1):
+            print ("Found part with adjacent symbol next line=", symbolsN[n], " ind=",indicesC[n], " num=",numbersC[n])
+            result += numbersC[n]
+            
 print("numbersP:", numbersP)
 print("numLensP:", numLensP)
 print("indicesP:", indicesP)
@@ -99,10 +116,11 @@ print("numLensN:", numLensN)
 print("indicesN:", indicesN)    
 print("symbolsN:", symbolsN)
 
+print("middle Lines!!!")
 
-#for currentIndex in range(1, maxLine, 1):   
-if (1):
-    currentIndex=1
+for currentIndex in range(1, maxLine, 1):   
+#if (1):
+ #   currentIndex=1
     
     previous = lines[currentIndex-1]
     current = lines[currentIndex]
@@ -112,10 +130,12 @@ if (1):
     indicesP = indicesC
     symbolsP = symbolsC
     numLensP = numLensC
+    
     numbersC = numbersN
     indicesC = indicesN
     symbolsC = symbolsN
     numLensC = numLensN
+    
     numbersN = []     ## clear the next before repopulating
     indicesN = []     ## clear the next before repopulating
     symbolsN = []     ## clear the next before repopulating
@@ -137,42 +157,63 @@ if (1):
     print("symbolsN:", symbolsN) 
     
     ## work out if any adjacent to each number    
-    indicesCLen = len(indicesC) - 1
-    symbolsCLen = len(symbolsC) - 1
-    symbolsPLen = len(symbolsP) - 1
-    symbolsNLen = len(symbolsN) - 1
+    indicesCLen = len(indicesC) 
+    symbolsCLen = len(symbolsC) 
+    symbolsPLen = len(symbolsP) 
+    symbolsNLen = len(symbolsN) 
     
-    for n in range(1, indicesCLen, 1):           
-        if (n < symbolsPLen):        
-             if (symbolsP[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsP[n][0] >= indicesC[n]-numLensC[n]-1):
-                print ("Found part with adjacent symbol next line=", symbolsP[n], " ind=",indicesC[n], " num=",numbersC[n])
-                result += numbersC[n]    
-        if (n < symbolsCLen):
-            if (symbolsC[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsC[n][0] >= indicesC[n]-numLensC[n]-1):
-                print ("Found part with adjacent symbol=", symbolsC[n], " ind=",indicesC[n], " num=",numbersC[n])
-                result += numbersC[n]
-        if (n < symbolsNLen):
-            if (symbolsN[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsN[n][0] >= indicesC[n]-numLensC[n]-1):
-                print ("Found part with adjacent symbol next line=", symbolsN[n], " ind=",indicesC[n], " num=",numbersC[n])
-                result += numbersC[n]
-            
-    numbersP = numbersC
-    indicesP = indicesC
-    numLensP = numLensC
-    numbersC = numbersN
-    indicesC = indicesN
-    numLensC = numLensN
-        
+    print ("indicesCLen = ",indicesCLen)
+    print ("symbolsCLen = ",symbolsCLen)
+
     
-    #print("previous=", previous)
-    #print("current=",current)
-    #print("next=", next)   
+    for n in range(0, indicesCLen, 1):           
+        for s in range(0,len(symbolsP),1):
+             if (symbolsP[s][0] <= indicesC[n]+numLensC[n]+1) and (symbolsP[s][0] >= indicesC[n]-numLensC[n]-1):
+                print ("Found part with adjacent symbol next line=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
+                result += numbersC[n]                   
+        for s in range(0,len(symbolsC),1):
+            if (symbolsC[s][0] <= indicesC[n]+numLensC[n]+1) and (symbolsC[s][0] >= indicesC[n]-numLensC[n]-1):
+                print ("Found part with adjacent symbol=", symbolsC[s], " ind=",indicesC[n], " num=",numbersC[n])
+                result += numbersC[n]
+        for s in range(0,len(symbolsN),1):
+            if (symbolsN[s][0] <= indicesC[n]+numLensC[n]+1) and (symbolsN[s][0] >= indicesC[n]-numLensC[n]-1):
+                print ("Found part with adjacent symbol next line=", symbolsN[s], " ind=",indicesC[n], " num=",numbersC[n])
+                result += numbersC[n]            
+      
 
+numbersP = numbersC
+indicesP = indicesC
+symbolsP = symbolsC
+numLensP = numLensC
+numbersC = numbersN
+indicesC = indicesN
+symbolsC = symbolsN
+numLensC = numLensN      
+## work out if any adjacent to each number    
+indicesCLen = len(indicesC) 
+symbolsCLen = len(symbolsC) 
+symbolsPLen = len(symbolsP) 
 
+print("Last Line!!!")
 
+print("numbersP:", numbersP)
+print("numLensP:", numLensP)
+print("indicesP:", indicesP)
+print("symbolsP:", symbolsP)
+print("numbersC:", numbersC)
+print("numLensC:", numLensC)
+print("indicesC:", indicesC)
+print("symbolsC:", symbolsC)
 
+#deal with last line
+for n in range(0, indicesCLen, 1):           
+    if (n < symbolsPLen):        
+         if (symbolsP[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsP[n][0] >= indicesC[n]-numLensC[n]-1):
+            print ("Found part with adjacent symbol next line=", symbolsP[n], " ind=",indicesC[n], " num=",numbersC[n])
+            result += numbersC[n]                   
+    if (n < symbolsCLen):
+        if (symbolsC[n][0] <= indicesC[n]+numLensC[n]+1) and (symbolsC[n][0] >= indicesC[n]-numLensC[n]-1):
+            print ("Found part with adjacent symbol=", symbolsC[n], " ind=",indicesC[n], " num=",numbersC[n])
+            result += numbersC[n]      
 
-
-
-              
 print (result)
