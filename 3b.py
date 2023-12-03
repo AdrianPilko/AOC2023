@@ -101,6 +101,7 @@ def checkSymbols(CheckPre,CheckNext,
     if (CheckPre == True) and (len(numbersP) > maxNum):  maxNum = len(numbersP)
     if (CheckNext == True) and (len(numbersN) > maxNum):   maxNum = len(numbersN)
     
+    foundNumber = 0
     
     for s in range(0,maxSymCurrent,1):
         print ("s=",s)
@@ -112,20 +113,33 @@ def checkSymbols(CheckPre,CheckNext,
                     ## we found a gear in current line we now need to check for numbers:
                     ## in next line adjacent to this or current or previous (controled by CheckPre and CheckNext
                     if n+1 < len(indicesC):
+                        print("checking for numbers adjacent current line")
                         if (indicesC[n+1] == indicesC[n]+numLensC[n]+1):
                             ratio += numbersC[n] * numbersC[n+1]
+                            print("FOUND on current line")
+                        else:
+                            print("No adjacent on current line")
                     if (CheckPre == True):
-                        if n+1 < len(indicesP):
-                            if (indicesC[n] == indicesP[n]+numLensP[n]+1):
-                                ratio += numbersP[n] * numbersC[n+1]                    
+                        print("checking for numbers adjacent prev line")
+                        if n < len(indicesP):
+                            if (symbolsC[s][0] <= indicesP[n]+numLensP[n]) and (symbolsC[s][0] >= indicesP[n]-1):
+                                foundNumber = numbersP[n]
+                                print("FOUND on prev line ", indicesP[n])
+                            else:
+                                print("No adjacent on prev line ", indicesP[n])                                
                         else:
                             print("Not checked Pre")
                     if (CheckNext == True):
-                        if n+1 < len(indicesN):
-                            if (indicesC[n] == indicesN[n]+numLensN[n]+1):
-                                ratio += numbersN[n] * numbersN[n+1]                    
+                        if n < len(indicesN):
+                            print("checking for numbers adjacent next line")
+                            if (symbolsC[s][0] <= indicesN[n]+numLensN[n]) and (symbolsC[s][0] >= indicesN[n]-1):
+                                ratio += numbersN[n] * foundNumber
+                                print("FOUND on next line ", indicesN[n])
+                            else:
+                                print("No adjacent on next line ", indicesN[n])                                                                
                         else:
-                            print("Not checked Next")                                
+                            print("Not checked Next")  
+    print(ratio)
     return ratio
 
 numbersP = []
@@ -141,27 +155,28 @@ numLensN = []
 indicesN = []
 symbolsN = []
 
-
+test= False
 # test ##################################
-line0="467..114.."
-line1="...*......"
-line2="..35..633."
+if (test == True):
+    line0="467..114.."
+    line1="...*......"
+    line2="..35..633."
 
-numbersP, indicesP, numLensP = extractNumbersIndices(line0)
-symbolsP = extractSymbolsIndices(line0)
-numbersC, indicesC, numLensC = extractNumbersIndices(line1)
-symbolsC = extractSymbolsIndices(line1)
-numbersN, indicesN, numLensN = extractNumbersIndices(line2)
-symbolsN = extractSymbolsIndices(line2)
-totalratio=0
-totalratio+=checkSymbols(True, True, 
-                 numbersP, numbersC, numbersN, 
-                 indicesP, indicesC, indicesN, 
-                 numLensP, numLensC, numLensN, 
-                 symbolsC)
-print(totalratio)
-print("DONE SIMPLE TEST EXITTING")
-sys.exit(0)
+    numbersP, indicesP, numLensP = extractNumbersIndices(line0)
+    symbolsP = extractSymbolsIndices(line0)
+    numbersC, indicesC, numLensC = extractNumbersIndices(line1)
+    symbolsC = extractSymbolsIndices(line1)
+    numbersN, indicesN, numLensN = extractNumbersIndices(line2)
+    symbolsN = extractSymbolsIndices(line2)
+    totalratio=0
+    totalratio+=checkSymbols(True, True, 
+                     numbersP, numbersC, numbersN, 
+                     indicesP, indicesC, indicesN, 
+                     numLensP, numLensC, numLensN, 
+                     symbolsC)
+    print(totalratio)
+    print("DONE SIMPLE TEST EXITTING")
+    sys.exit(0)
 ##################################
         
 #read the lines
