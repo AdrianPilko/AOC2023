@@ -71,7 +71,7 @@ def checkSymbols(CheckPre,CheckNext, symbolsP, symbolsN, indicesC, symbolsC, num
    #                 print ("NO MATCH PREVIOUS=", symbolsP[s], " ind=",indicesC[n], " num=",numbersC[n])
     for s in range(0,len(symbolsC),1):
         for n in range(0,len(indicesC),1):         
-            if  (symbolsC[s][0] <= indicesC[n]+numLensC[n]) and (symbolsC[s][0] >= indicesC[n]):
+            if  (symbolsC[s][0] <= indicesC[n]+numLensC[n]) and (symbolsC[s][0] >= indicesC[n]-1):
                 print ("current line=", symbolsC[s], " ind=",indicesC[n], " num=",numbersC[n])
                 result += numbersC[n]
             #else:
