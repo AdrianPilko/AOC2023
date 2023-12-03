@@ -116,7 +116,7 @@ def checkSymbols(CheckPre,CheckNext,
                         print("checking for numbers adjacent current line")
                         if (indicesC[n+1] == indicesC[n]+numLensC[n]+1):
                             ratio += numbersC[n] * numbersC[n+1]
-                            print("FOUND on current line")
+                            print("FOUND on current line ")
                         else:
                             print("No adjacent on current line")
                     if (CheckPre == True):
@@ -155,13 +155,13 @@ numLensN = []
 indicesN = []
 symbolsN = []
 
-test= False
+test= True
 # test ##################################
 if (test == True):
-    line0="467..114.."
-    line1="...*......"
-    line2="..35..633."
-
+    line0="467..114.."  # none only count the ones from second line if no gears on first
+    line1="...*..*..."  # 467*35 +114*633 = 88507    got correct answer
+    line2="..35*633.."  # 35*633 +35*43 + 43*633 = 50879 was getting 44310,  6569 too few
+    line3="....*43*.."  # none                     total = 139386  (was getting 132817
     numbersP, indicesP, numLensP = extractNumbersIndices(line0)
     symbolsP = extractSymbolsIndices(line0)
     numbersC, indicesC, numLensC = extractNumbersIndices(line1)
@@ -169,6 +169,19 @@ if (test == True):
     numbersN, indicesN, numLensN = extractNumbersIndices(line2)
     symbolsN = extractSymbolsIndices(line2)
     totalratio=0
+    totalratio+=checkSymbols(True, True, 
+                     numbersP, numbersC, numbersN, 
+                     indicesP, indicesC, indicesN, 
+                     numLensP, numLensC, numLensN, 
+                     symbolsC)
+
+    numbersP, indicesP, numLensP = extractNumbersIndices(line1)
+    symbolsP = extractSymbolsIndices(line0)
+    numbersC, indicesC, numLensC = extractNumbersIndices(line2)
+    symbolsC = extractSymbolsIndices(line1)
+    numbersN, indicesN, numLensN = extractNumbersIndices(line3)
+    symbolsN = extractSymbolsIndices(line2)
+
     totalratio+=checkSymbols(True, True, 
                      numbersP, numbersC, numbersN, 
                      indicesP, indicesC, indicesN, 
