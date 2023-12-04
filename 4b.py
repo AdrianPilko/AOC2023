@@ -27,39 +27,50 @@ result = 0
 #process the lines
 
 ## for the second part we need to build a new list of cards based on the current lines
-matchNum = 0
-newLines = []
+matchNum = 100
+#index to start back from if a win happens and entries added
+startFrom = 0
+while matchNum !=0:
+    lines = tuple(lines[i] for i in range(startFrom, len(lines)))
 
-for index, line in enumerate(lines):
-   print(f"Line {index}: {line}")
-   linesp=line.split("|")
-   #print(linesplit) # this is a list now so camt split
-   fir=linesp[0]   
-   sec=linesp[1]
-   cardNum=fir.split(":")[0]   # might not need this
-   cardNum=cardNum.split(" ")[1]
-   fir=fir.split(":")[1]
-   fir= [int(num) for num in fir.split() if num.isdigit()]
-   print(fir)
-   sec= [int(num) for num in sec.split() if num.isdigit()]
-   print(sec)
+    # Iterate over the new tuple with the same indices as the original
+    for index, line in enumerate(lines, start=startFrom):
+       startFrom = 0
+       print(f"Line {index}: {line}")
+       linesp=line.split("|")
+       #print(linesplit) # this is a list now so camt split
+       fir=linesp[0]   
+       sec=linesp[1]
+       cardNum=fir.split(":")[0]   # might not need this
+       cardNum=cardNum.split(" ")[1]
+       fir=fir.split(":")[1]
+       fir= [int(num) for num in fir.split() if num.isdigit()]
+       print(fir)
+       sec= [int(num) for num in sec.split() if num.isdigit()]
+       print(sec)
 
-   for f in fir:
-      for w in sec:
-        #print("w=",w, "f=",f)
-        if f==w: 
-           #we've won, increment a win counter
-           matchNum+=1;           
-   ## we've processed the line and have matchNum wins so replcate the next matchNum lines
+       for f in fir:
+          for w in sec:
+            #print("w=",w, "f=",f)
+            if f==w: 
+               #we've won, increment a win counter
+               matchNum+=1;           
+       ## we've processed the line and have matchNum wins so keep a list of how many rows to replicate
+       
 
-   #now append the next matchNum lines
-   print("linesBefore=",lines)
-   for n in range(0, matchNum,1):
-       #if index+n+1 < len(lines):
-       lines = lines[:index+n+1] + (line,) + lines[index+n+1:]
-
-   print("linesAfter=",lines)
-   matchNum = 0       # reset matchNum
+       #now append the next matchNum lines
+       print("linesBefore=",lines)
+       # Get the lines to replicate (excluding the current line)
+       linesToRep = lines[index+1 : index + matchNum + 1]
+       # Create a new tuple by replicating the lines
+       lines = lines + linesToRep
+       
+       if matchNum != 0: 
+            startFrom = index+1
+            break
+       
+       print("linesAfter=",lines)
+       matchNum = 0       # reset matchNum
 
 result = len(lines)
 print (result)
