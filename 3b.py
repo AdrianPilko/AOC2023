@@ -71,20 +71,20 @@ def checkSymbols(CheckPre,CheckNext,
     
     
     
-    print("numbersP:", numbersP)
-    print("numLensP:", numLensP)
-    print("indicesP:", indicesP)
-    print("symbolsP:", symbolsP)
+    # print("numbersP:", numbersP)
+    # print("numLensP:", numLensP)
+    # print("indicesP:", indicesP)
+    # print("symbolsP:", symbolsP)
     
-    print("numbersC:", numbersC)
-    print("numLensC:", numLensC)
-    print("indicesC:", indicesC)
-    print("symbolsC:", symbolsC)
+    # print("numbersC:", numbersC)
+    # print("numLensC:", numLensC)
+    # print("indicesC:", indicesC)
+    # print("symbolsC:", symbolsC)
 
-    print("numbersN:", numbersN)
-    print("numLensN:", numLensN)
-    print("indicesN:", indicesN)
-    print("symbolsN:", symbolsN)
+    # print("numbersN:", numbersN)
+    # print("numLensN:", numLensN)
+    # print("indicesN:", indicesN)
+    # print("symbolsN:", symbolsN)
     
     x = 0
     absDistAlongLine = 0
@@ -97,50 +97,49 @@ def checkSymbols(CheckPre,CheckNext,
     
     
     maxSymCurrent = len(symbolsC)
-    maxNum = len(numbersC)
-    if (CheckPre == True) and (len(numbersP) > maxNum):  maxNum = len(numbersP)
-    if (CheckNext == True) and (len(numbersN) > maxNum):   maxNum = len(numbersN)
+   # maxNum = len(numbersC)
+   # if (CheckPre == True) and (len(numbersP) > maxNum):  maxNum = len(numbersP)
+   # if (CheckNext == True) and (len(numbersN) > maxNum):   maxNum = len(numbersN)
     
     foundNumber = 0
+    gearFound = 0;
     
     for s in range(0,maxSymCurrent,1):
-        print ("s=",s)
-        for n in range(0,maxNum,1):         
-            print ("n=",n)
-            if s < len(symbolsC):
+        #for n in range(0,maxNum,1):         
+           # if s < len(symbolsC):
                 if  (symbolsC[s]):
                     print ("found gear in current line=", symbolsC[s])
+                    gearFound += 1 
                     ## we found a gear in current line we now need to check for numbers:
                     ## in next line adjacent to this or current or previous (controled by CheckPre and CheckNext
-                    if n+1 < len(indicesC):
-                        print("checking for numbers adjacent current line")
-                        if (indicesC[n+1] == indicesC[n]+numLensC[n]+1):
-                            ratio += numbersC[n] * numbersC[n+1]
-                            print("FOUND on current line ")
-                        else:
-                            print("No adjacent on current line")
-                    if (CheckPre == True):
-                        print("checking for numbers adjacent prev line")
-                        if n < len(indicesP):
-                            if (symbolsC[s][0] <= indicesP[n]+numLensP[n]) and (symbolsC[s][0] >= indicesP[n]-1):
-                                foundNumber = numbersP[n]
-                                print("FOUND on prev line ", indicesP[n])
-                            else:
-                                print("No adjacent on prev line ", indicesP[n])                                
-                        else:
-                            print("Not checked Pre")
-                    if (CheckNext == True):
-                        if n < len(indicesN):
-                            print("checking for numbers adjacent next line")
-                            if (symbolsC[s][0] <= indicesN[n]+numLensN[n]) and (symbolsC[s][0] >= indicesN[n]-1):
-                                ratio += numbersN[n] * foundNumber
-                                print("FOUND on next line ", indicesN[n])
-                            else:
-                                print("No adjacent on next line ", indicesN[n])                                                                
-                        else:
-                            print("Not checked Next")  
-    print(ratio)
-    return ratio
+                    # if n+1 < len(indicesC):
+                        # print("checking for numbers adjacent current line")
+                        # if (indicesC[n+1] == indicesC[n]+numLensC[n]+1):
+                            # ratio += numbersC[n] * numbersC[n+1]
+                            # print("FOUND on current line ")
+                        # else:
+                            # print("No adjacent on current line")
+                    # if (CheckPre == True):
+                        # print("checking for numbers adjacent prev line")
+                        # if n < len(indicesP):
+                            # if (symbolsC[s][0] <= indicesP[n]+numLensP[n]) and (symbolsC[s][0] >= indicesP[n]-1):
+                                # foundNumber = numbersP[n]
+                                # print("FOUND on prev line ", indicesP[n])
+                            # else:
+                                # print("No adjacent on prev line ", indicesP[n])                                
+                        # else:
+                            # print("Not checked Pre")
+                    # if (CheckNext == True):
+                        # if n < len(indicesN):
+                            # print("checking for numbers adjacent next line")
+                            # if (symbolsC[s][0] <= indicesN[n]+numLensN[n]) and (symbolsC[s][0] >= indicesN[n]-1):
+                                # ratio += numbersN[n] * foundNumber
+                                # print("FOUND on next line ", indicesN[n])
+                            # else:
+                                # print("No adjacent on next line ", indicesN[n])                                                                
+                        # else:
+                            # print("Not checked Next")  
+    return gearFound
 
 numbersP = []
 numLensP = []
@@ -155,7 +154,7 @@ numLensN = []
 indicesN = []
 symbolsN = []
 
-test= True
+test= False
 # test ##################################
 if (test == True):
     line0="467..114.."  # none only count the ones from second line if no gears on first
