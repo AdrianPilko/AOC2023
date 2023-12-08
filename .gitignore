@@ -152,3 +152,6 @@ cython_debug/
 #.idea/
 *.txt
 1b.py~
+Day8_z80/z80code.lst
+Day8_z80/z80code.obj
+Day8_z80/eeprom.bin
