@@ -35,10 +35,17 @@ mainLoop:
     call delaySome
     call displayBlankWhereLWas
     call displayBlankWhereRWas
+;    push hl 
+;    ld hl, (currentPosInLR)
+;    call hexprint16_onRight
+;    pop hl
         
     ;;jp mainLoop
-    
-    ld a, (currentPosInLR)
+    push hl 
+    ld hl, currentPosInLR
+    ld a, (hl)    
+    call hexprint16_onRight
+    pop hl
     cp 0
     jp z, goLeft
     ;; else go right
@@ -56,7 +63,7 @@ goRight:
     
     ld hl, inputDataLR_AsNum ; reset LR to start
     ld (currentPosInLR), hl
-goRightCarryOn:    
+goRightCarryOn:        
     ; increment result
     ld hl, (result)
     inc hl
@@ -285,6 +292,15 @@ displayCharacter:    ; register a stores tghe character
     call waitLCD
     out (lcdRegisterSelectData), a
     ret 
+
+hexprint16_onRight
+    call waitLCD
+    ld a, $80+$49        ; Set DDRAM address to start line 2 plus 5
+    out (lcdRegisterSelectCommand), a     ; Send command to LCD    
+    call hexprint16
+    
+    ret
+
     
 hexprint16  ; print one 2byte number stored in location $to_print modified from hprint http://swensont.epizy.com/ZX81Assembly.pdf?i=1
 	;ld hl,$ffff  ; debug check conversion to ascii
