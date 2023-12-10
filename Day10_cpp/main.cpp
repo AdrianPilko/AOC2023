@@ -39,16 +39,29 @@ bool getLineFromFile(std::ifstream & fileStream, std::string &retLine )
 // slight bit inefficient reading file twice, but the real data has all different line lengths!
 void getLongestLine(int & longest, int & numLines)
 {
+   longest = 0;
    std::ifstream inputFile(filenameStr.c_str()); // Replace "filename.txt" with your file's name
    
    std::string line;
    
-   while (bool gotLine = getLineFromFile(inputFile, line))
+   bool gotLine = getLineFromFile(inputFile, line);
+     
+   
+   while (gotLine)
    {    
      int temp = line.size();
-     if (gotLine) numLines++;
-     if (gotLine && temp > longest) longest = temp;
-   
+     if (gotLine) 
+     {  
+        numLines++;
+       ///std::cout << "found " << numLines << " so far" << std::endl;
+     }   
+     if (gotLine && temp > longest) 
+     {
+        longest = temp;
+        //std::cout << "found longest so far line=" <<longest << std::endl;
+     }
+     
+     gotLine = getLineFromFile(inputFile, line);
    }
    inputFile.close();
 }
@@ -173,8 +186,17 @@ main()
       row = nextRow;
       col = nextCol;
       std::cout << "to " << row << "," << col << std::endl;
-      triedEveryDirection = 0;
-      currentDir = (t_directn)triedEveryDirection;
+      triedEveryDirection++;
+      lastDir = currentDir;
+      if (triedEveryDirection <= 3)
+      {
+         currentDir = (t_directn)triedEveryDirection;        
+      }
+      else
+      {
+         triedEveryDirection = 0;
+         currentDir = (t_directn)triedEveryDirection;
+      }
     }
     else
     {
@@ -183,7 +205,8 @@ main()
       
       if (triedEveryDirection <= 3)
       {
-          currentDir = (t_directn)triedEveryDirection;        
+          lastDir = currentDir;
+          currentDir = (t_directn)triedEveryDirection;              
       }
       else
       {
