@@ -99,7 +99,7 @@ bool isValidDirection(t_directn di, char theNextSymbol)
     case '7' : if ((di == eleft) || (di == edown)) rv = true; break;
     case 'J' : if ((di == eleft) || (di == eup)) rv = true; break;
     case 'F' : if ((di == eright) || (di == edown)) rv = true; break;
-    case 'L' : if ((di == eright) || (di == edown)) rv = true; break;
+    case 'L' : if ((di == eright) || (di == eup)) rv = true; break;
     case 'S' : // should never happen but catch just in case
               std::cout <<"got back to starting position!" << std::endl; rv = false; break;
     default: rv = false;  break;
@@ -252,10 +252,8 @@ main()
       currentDir = enotValid;
       result = (float) hops / 2.0;
     }  
-    
-    std::system("pause");
   }
-  std::cout << "hops = " << hops << " result = " << result << std::endl;
+  std::cout << "hops = " << hops << " result = " << result+1 << std::endl;
   std::cout << " pause, press return" << std::endl;
   std::system("pause");
   return 0;
