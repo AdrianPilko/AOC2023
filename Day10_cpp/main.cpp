@@ -5,8 +5,8 @@
 #include <map>
 
 
-std::string filenameStr = "8test.txt";
-//std::string filenameStr = "8.txt";
+//std::string filenameStr = "8test.txt";
+std::string filenameStr = "8.txt";
 
 /* 
 .....
