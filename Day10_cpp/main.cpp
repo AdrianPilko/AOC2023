@@ -16,7 +16,30 @@ std::string filenameStr = "8test.txt";
 ..... 
 */
 
-typedef enum e_directnV {eup = 0,edown, eleft, eright} t_directn; 
+typedef enum e_directnV {eup = 0,edown, eleft, eright, enotValid} t_directn; 
+
+// Overload the << operator for Direction enum
+std::ostream& operator<<(std::ostream& os, const e_directnV& dir) {
+    switch (dir) {
+        case eup:
+            os << "up";
+            break;
+        case edown:
+            os << "down";
+            break;
+        case eleft:
+            os << "left";
+            break;
+        case eright:
+            os << "right";
+            break;
+        case enotValid:
+        default:
+            os << "Invalid direction";
+            break;
+    }
+    return os;
+}
 
 bool getLineFromFile(std::ifstream & fileStream, std::string &retLine ) 
 { 
@@ -85,6 +108,45 @@ bool isValidDirection(t_directn di, char theNextSymbol)
   return rv;
 }
 
+t_directn theNextValidDirection(t_directn currentDir, char theNextSymbol)
+{
+  t_directn rv;
+  
+  switch (theNextSymbol)
+  {
+    case '|' : 
+                if (currentDir == edown) rv = edown;     
+                else rv = eup;     
+                break;
+    case '-' : 
+                if (currentDir == eleft) rv = eleft;     
+                else rv = eright;     
+                break;
+    case '7' : 
+                if (currentDir == eup) rv = eleft;     
+                else  rv = edown;     
+                break;
+    case 'J' : 
+                if (currentDir == eright) rv = eup;     
+                else  rv = eleft;     
+                break;
+    case 'F' : 
+                if (currentDir == eup) rv = eright;     
+                else rv = edown;     
+                break;
+    case 'L' : 
+                if (currentDir == edown) rv = eright;     
+                else rv = eup;     
+                break;
+    case 'S' : // should never happen but catch just in case
+              std::cout <<"got back to starting position!" << std::endl; rv = enotValid; break;
+    default: rv = enotValid;  break;
+    break;
+  };    
+  return rv;
+}
+
+
 main()
 {
   std::cout << " entering main " << std::endl;
@@ -135,89 +197,65 @@ main()
   // starting at rowS, ColS navigate the vector until can't go any further
   
   // choose a starting direction
-  t_directn currentDir;
-  t_directn lastDir;
-  char nextChar;
+  t_directn currentDir;  
   int row = rowS;
   int col = colS;
+  int hops = 0; 
+  int result = 0;
   
-  int nextRow = 0;
-  int nextCol = 0;
+  std::cout << " BEFORE START currentDir=" << currentDir << ", row=" << row << " col=" << col << std::endl;
   
-  int triedEveryDirection = 0;
-  currentDir = eup;
-  lastDir = eleft;
-  
-  std::cout << " before while loop , currentDir=" << currentDir << ", last=" << lastDir << std::endl;
-  
-  while (lastDir != currentDir)
+  // work out what the first valid direction is form S
+  bool validDir = false; 
+
+  if (isValidDirection(eup, data[row-1][col]))
   {
-    if ((currentDir == eleft) && (col > 0)) 
-    { 
-      nextChar = data[row][col-1]; 
-      nextRow = row; 
-      nextCol = col-1; 
-      std::cout << " trying left,";
-    }  
-    if ((currentDir == eright) && (col < longestLine-1))
-    { 
-      nextChar = data[row][col+1];
-      nextRow = row; 
-      nextCol = col+1;
-      std::cout << " trying right,";
-    } 
-    if ((currentDir == eup) && (row > 0)) 
-    { 
-      nextChar = data[row-1][col];
-      nextRow = row-1; 
-      nextCol = col;
-      std::cout << " trying up,";
-    }  
-    if ((currentDir == edown) && (row < numLines-1)) {
-      nextChar = data[row+1][col];
-      nextRow = row+1; 
-      nextCol = col;    
-      std::cout << " trying down,";
-    }  
+     currentDir = eup;
+     row = row-1; 
+  }
+  else if (isValidDirection(edown, data[row+1][col]))
+  {
+     currentDir = edown;
+     row = row+1; 
+  }
+  else if (isValidDirection(eleft, data[row][col-1]))
+  {
+     currentDir = eleft;
+     col = col-1;      
+  }  
+  else if (isValidDirection(eright, data[rowS][colS+1]))
+  {
+     currentDir = eright;
+     col = col+1;      
+  }
+  std::cout << " currentDir=" << currentDir << ", row=" << row << " col=" << col << std::endl;  
+
+  while (enotValid != currentDir)
+  {
+    currentDir = theNextValidDirection(currentDir, data[row][col]);
     
-    if (isValidDirection(currentDir, nextChar))
+    if (isValidDirection(currentDir, data[row][col]))
     {
-      std::cout << "valid from " << row << "," << col << " " ;
-      row = nextRow;
-      col = nextCol;
-      std::cout << "to " << row << "," << col << std::endl;
-      triedEveryDirection++;
-      lastDir = currentDir;
-      if (triedEveryDirection <= 3)
-      {
-         currentDir = (t_directn)triedEveryDirection;        
-      }
-      else
-      {
-         triedEveryDirection = 0;
-         currentDir = (t_directn)triedEveryDirection;
-      }
+       switch (currentDir)
+       {
+         case eup : row = row - 1; break;
+         case edown : row = row + 1; break;
+         case eleft : col = col - 1; break;
+         case eright : col = col + 1; break;
+       };
+       std::cout << " WAS valid, currentDir=" << currentDir <<", row=" << row << " col=" << col << std::endl;  
+       hops++;
     }
     else
     {
-      std::cout << " not valid from " << row << "," << col << " to " << nextRow << "," << nextCol << std::endl;      
-      triedEveryDirection++;
-      
-      if (triedEveryDirection <= 3)
-      {
-          lastDir = currentDir;
-          currentDir = (t_directn)triedEveryDirection;              
-      }
-      else
-      {
-        triedEveryDirection = 0;
-        lastDir = currentDir;
-        currentDir = (t_directn)triedEveryDirection;
-      }
-    }
-    std::cout << " pause, press return" << std::endl;
+      std::cout << " not valid, currentDir=" << currentDir <<", row=" << row << " col=" << col << std::endl;  
+      currentDir = enotValid;
+      result = (float) hops / 2.0;
+    }  
+    
     std::system("pause");
   }
+  std::cout << "hops = " << hops << " result = " << result << std::endl;
   std::cout << " pause, press return" << std::endl;
   std::system("pause");
   return 0;
